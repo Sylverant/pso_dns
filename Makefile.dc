@@ -1,0 +1,32 @@
+#
+# Sylverant DNS Server
+# Dreamast Makefile
+#
+# Why? Because I can.
+#
+
+TARGET = pso_dns.elf
+OBJS = pso_dns.o romdisk.o
+KOS_ROMDISK_DIR = romdisk
+KOS_CFLAGS += -Wno-char-subscripts
+
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	kos-cc -o $(TARGET) $(OBJS)
+	-rm -f romdisk.*
+	-rm -rf romdisk
+
+romdisk:
+	mkdir romdisk
+	cp pso_dns.conf.sample romdisk/pso_dns.conf
+
+romdisk.img: romdisk
+
+clean:
+	-rm -f $(OBJS) $(TARGET) romdisk.*
+	-rm -fr romdisk
+
+.PHONY: clean all
+
+include $(KOS_BASE)/Makefile.rules
